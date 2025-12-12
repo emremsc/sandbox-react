@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'motion/react'
 import { useRef, useEffect, useState } from 'react'
+import styles from './ConfirmButton.module.css'
 
 export default function ConfirmButton() {
     const [buttonState, setButtonState] = useState('default')
@@ -46,7 +47,7 @@ export default function ConfirmButton() {
                             className="text-sm text-white block">
                             Confirm
                         </motion.span>
-                        <motion.div exit={{ opacity: 0, scale: 1.4 }} className="absolute inset-0 outliner rounded-full" />
+                        <motion.div exit={{ opacity: 0, scale: 1.4 }} className={` ${styles.outliner} absolute inset-0 rounded-full`} />
                     </motion.button>
                 )}
                 {buttonState === 'confirming' && (
@@ -102,7 +103,7 @@ export default function ConfirmButton() {
                         style={{ borderRadius: '32px' }}
                         layoutId="btn"
                         key={buttonState}
-                        className="h-8 flex items-center justify-center  px-4 bg-[#06F96B] pingo">
+                        className={`${styles.pingo} h-8 flex items-center justify-center  px-4 bg-[#06F96B] `}>
                         <motion.span
                             initial={{ y: 30, opacity: 0.5, filter: 'blur(4px)' }}
                             animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}

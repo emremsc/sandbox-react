@@ -1,0 +1,19 @@
+.path {
+    fill: none;
+    stroke: black;
+    stroke-width: 6;
+
+    stroke-dasharray: var(--path-total-length);
+    stroke-dashoffset: var(--path-total-length);
+
+    animation: draw 5s ease-in-out infinite alternate;
+}
+
+@keyframes draw {
+    from {
+        stroke-dashoffset: var(--path-total-length);
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}

@@ -1,19 +1,4 @@
-.bio {
-    opacity: 1;
-    transform: scale(1);
-    filter: blur(0px);
-    transition: all 1s 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-    will-change: transform, opacity, filter;
-}
-
-.bio[data-entered='true'] {
-    transform: scale(calc(1 - var(--scroll-progress) * 0.1));
-    filter: blur(calc(var(--scroll-progress) * 40px));
-    opacity: calc(1 - var(--scroll-progress) * 1.8);
-    transition: all 0s linear;
-}
-
-.bio-text span {
+.text span {
     display: inline-block;
     opacity: 0;
     animation: text-reveal 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;

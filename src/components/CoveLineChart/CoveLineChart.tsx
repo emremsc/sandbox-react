@@ -1,3 +1,12 @@
+//
+//
+//
+//
+//
+//
+//
+// This file is broken and I'm too lazy to fix it. Do not use it. All you need to now is when the data changes new path gets created and transition effect fires. Inside the transition I'm using d3-interpolate-path algorithm to morph between old and new path.
+
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
@@ -36,19 +45,19 @@ const createTimestamps = (period: string, count: number) => {
     switch (period) {
         case '1h':
             interval = 60 * 1000
-            break // 1 minute
+            break 
         case '1d':
             interval = 60 * 60 * 1000
-            break // 1 hour
+            break
         case '1w':
             interval = 6 * 60 * 60 * 1000
-            break // 6 hours
+            break
         case '1m':
             interval = 24 * 60 * 60 * 1000
-            break // 1 day
+            break
         case '1y':
             interval = 7 * 24 * 60 * 60 * 1000
-            break // 1 week
+            break
     }
 
     for (let i = count - 1; i >= 0; i--) {
@@ -60,31 +69,31 @@ const createTimestamps = (period: string, count: number) => {
 
 const bitcoinData = {
     '1h': (() => {
-        const prices = generateRealisticData(49345.67, 60, 0.0005) // 60 data points, low volatility
+        const prices = generateRealisticData(49345.67, 60, 0.0005)
         const timestamps = createTimestamps('1h', 60)
         return timestamps.map((date, i) => ({ date, price: prices[i] }))
     })(),
 
     '1d': (() => {
-        const prices = generateRealisticData(56345.67, 24, 0.002) // 24 data points, medium-low volatility
+        const prices = generateRealisticData(56345.67, 24, 0.002)
         const timestamps = createTimestamps('1d', 24)
         return timestamps.map((date, i) => ({ date, price: prices[i] }))
     })(),
 
     '1w': (() => {
-        const prices = generateRealisticData(69823.45, 28, 0.005) // 28 data points, medium volatility
+        const prices = generateRealisticData(69823.45, 28, 0.005)
         const timestamps = createTimestamps('1w', 28)
         return timestamps.map((date, i) => ({ date, price: prices[i] }))
     })(),
 
     '1m': (() => {
-        const prices = generateRealisticData(81456.78, 30, 0.01) // 30 data points, medium-high volatility
+        const prices = generateRealisticData(81456.78, 30, 0.01)
         const timestamps = createTimestamps('1m', 30)
         return timestamps.map((date, i) => ({ date, price: prices[i] }))
     })(),
 
     '1y': (() => {
-        const prices = generateRealisticData(88456.78, 52, 0.03) // 52 data points, high volatility
+        const prices = generateRealisticData(88456.78, 52, 0.03) 
         const timestamps = createTimestamps('1y', 52)
         return timestamps.map((date, i) => ({ date, price: prices[i] }))
     })(),
@@ -120,20 +129,17 @@ export default function CoveLineChart() {
     const clipContainerRef = useRef<HTMLDivElement>(null)
     const activeTabElementRef = useRef<HTMLButtonElement>(null)
 
-    // Update price information
     useEffect(() => {
         setCurrentPrice(lastPrice)
         setPriceChange(priceDiff)
         setPriceChangePercent(percentChange)
     }, [lastPrice, priceDiff, percentChange])
 
-    // Initialize the chart and handle updates
     useEffect(() => {
         if (!pathRef.current || dimensions.width === 0) return
 
         const path = d3.select(pathRef.current)
 
-        // Create scales
         const xScale = d3
             .scaleTime()
             .domain(d3.extent(data, (d) => d.date) as [Date, Date])
@@ -147,28 +153,22 @@ export default function CoveLineChart() {
             ])
             .range([dimensions.height - margin.bottom, margin.top])
 
-        // Create line generator
         const lineGenerator = d3
             .line<{ date: Date; price: number }>()
             .x((d) => xScale(d.date))
             .y((d) => yScale(d.price))
             .curve(d3.curveNatural)
 
-        // Generate the new path data
         const newPath = lineGenerator(data) || ''
 
-        // If this is the first render, set the path immediately without animation
         if (!isInitializedRef.current) {
             path.attr('d', newPath)
             isInitializedRef.current = true
             return
         }
 
-        // For subsequent renders, animate the transition
-        // Get the current path data before updating
         const currentPath = path.attr('d') || newPath
 
-        // Animate the transition
         path.transition()
             .duration(300)
             .ease(d3.easePolyOut.exponent(2.5))

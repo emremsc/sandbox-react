@@ -1,7 +1,15 @@
+//
+//
+//
+//
+//
+//
+//
+// This file is broken and I'm too lazy to fix it. Do not use it.
+
 'use client'
 
 import React, { useState } from 'react'
-import Image from 'next/image'
 import iphone from '/public/iPhone 16 Pro - Black Titanium - Portrait.png'
 import homeindicator from '/public/Home Indicator.png'
 import statusbar from '/public/Status Bar.png'
@@ -30,11 +38,11 @@ export default function CoveNavbar() {
 
     return (
         <div className="static">
-            <Image alt="" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-13" src={iphone} />
+            <img alt="" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-13" src={iphone} />
             <div className="relative w-[402px] h-[874px]">
-                <Image alt="" priority src={statusbar} className="absolute top-0 z-13" />
-                <Image alt="" priority src={homeindicator} className="absolute bottom-0 z-13" />
-                <Image alt="" priority src={contents} className="absolute bottom-0 z-12" />
+                <img alt="" src={statusbar} className="absolute top-0 z-13" />
+                <img alt="" src={homeindicator} className="absolute bottom-0 z-13" />
+                <img alt="" src={contents} className="absolute bottom-0 z-12" />
                 <div className="w-full h-full  flex flex-col overflow-hidden rounded-[44px] items-center justify-start">
                     <div className="absolute bottom-[37px] w-full  h-full px-4 flex items-end">
                         <div className=" w-full flex gap-4 justify-center ">

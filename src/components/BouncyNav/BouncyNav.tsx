@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState } from 'react'
 import { motion, useSpring, useTransform, useMotionValue } from 'motion/react'
 
-export function HeaderPlay() {
+export function BouncyNav() {
   const [position, setPosition] = useState({ top: 0, left: 0 })
   const childRef = useRef<HTMLDivElement>(null)
   const parentRef = useRef<HTMLDivElement>(null)

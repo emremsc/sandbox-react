@@ -1,8 +1,8 @@
 'use client'
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSpring } from 'motion/react'
 
-function PerspectiveTunnel({ squareCount = 16, perspective = 800 }: { squareCount?: number; perspective?: number }) {
+export default function PerspectiveTunnel({ squareCount = 16, perspective = 800 }: { squareCount?: number; perspective?: number }) {
     const containerRef = useRef<HTMLDivElement>(null)
 
     const spring = {
@@ -88,5 +88,3 @@ function PerspectiveTunnel({ squareCount = 16, perspective = 800 }: { squareCoun
         </div>
     )
 }
-
-export default PerspectiveTunnel

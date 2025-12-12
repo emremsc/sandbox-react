@@ -1,6 +1,3 @@
-// AnimatedBars.js - Web Component
-import { easings } from './utilities.js';
-
 class AnimatedBars extends HTMLElement {
   constructor() {
     super();
@@ -19,7 +16,6 @@ class AnimatedBars extends HTMLElement {
   }
 
   render() {
-    // Make the component itself a block element
     this.style.display = 'block';
     this.style.width = '200px';
     this.style.height = '600px';
@@ -54,7 +50,7 @@ class AnimatedBars extends HTMLElement {
       const children = this.mainContainer.children;
 
       let cycle = (Math.sin(time * Math.PI) + 1) / 2;
-      cycle = easings.easeInOutQuad(cycle);
+      cycle = easeInOutQuad(cycle);
 
       for (let i = 0; i < children.length; i++) {
         const currentHeight = this.baseHeight * Math.pow(this.scale, i);

@@ -1,10 +1,10 @@
-export function HeroText({text}:{text:string}) {
-    
+import styles from './HeroText.module.css'
 
+export default function HeroText({ text }: { text: string }) {
     const words = text.split(' ');
 
     return (
-        <h1 className="bio-text text-4xl leading-[1.1] font-normal tracking-tight text-balance lg:text-5xl">
+        <h1 className={`${styles.text} text-4xl leading-[1.1] font-normal tracking-tight text-balance lg:text-5xl`}>
             {words.map((word, wordIndex) => (
                 <span
                     key={`word-${wordIndex}`}
