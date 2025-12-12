@@ -24,11 +24,9 @@ export default function PerspectiveTunnel({ squareCount = 16, perspective = 800 
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
-            // Normalize mouse position to -1 to 1 range
             const normalizedX = (e.clientX / window.innerWidth) * 2 - 1
             const normalizedY = (e.clientY / window.innerHeight) * 2 - 1
 
-            // Update spring values
             x.set(normalizedX)
             y.set(normalizedY)
 
@@ -39,7 +37,6 @@ export default function PerspectiveTunnel({ squareCount = 16, perspective = 800 
         return () => document.removeEventListener('mousemove', handleMouseMove)
     }, [x, y])
 
-    // Rotation animation loop
     useEffect(() => {
         const animateRotation = () => {
             setRotationTime(Date.now())
@@ -51,20 +48,13 @@ export default function PerspectiveTunnel({ squareCount = 16, perspective = 800 
     }, [])
 
     const getSquareTransform = (square: { zOffset: number; index: number }): string => {
-        // Calculate rotation - each square has a different rotation offset
-        const rotationSpeed = 0.0005 // Adjust this to control rotation speed
-        const rotationOffset = square.index * 15 // Degrees offset between squares
+        const rotationSpeed = 0.0005
+        const rotationOffset = square.index * 15
         const rotation = (rotationTime * rotationSpeed + rotationOffset) % 360
-
-        // Skip movement for the closest square (index 0)
         if (square.index === 0) {
             return `translateZ(${square.zOffset}px) rotateZ(${rotation}deg)`
         }
-
-        // Calculate movement multiplier: further squares move more
         const movementMultiplier = square.index * 0.5
-
-        // Calculate offset based on spring values
         const offsetX = x.get() * 30 * movementMultiplier
         const offsetY = y.get() * 30 * movementMultiplier
 
