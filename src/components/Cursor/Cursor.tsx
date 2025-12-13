@@ -1,86 +1,85 @@
-"use client";
+'use client'
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from 'react'
 
 export default function Cursor() {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
-  const [hasPointer, setHasPointer] = useState(false);
-  const rafIdRef = useRef<number | null>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isHovering, setIsHovering] = useState(false)
+  const [hasPointer, setHasPointer] = useState(false)
+  const rafIdRef = useRef<number | null>(null)
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(pointer: fine)");
-    setHasPointer(mediaQuery.matches);
+    const mediaQuery = window.matchMedia('(pointer: fine)')
+    setHasPointer(mediaQuery.matches)
 
     const handleMediaChange = (e: MediaQueryListEvent) => {
-      setHasPointer(e.matches);
-    };
-
-    mediaQuery.addEventListener("change", handleMediaChange);
+      setHasPointer(e.matches)
+    }
+    mediaQuery.addEventListener('change', handleMediaChange)
     return () => {
-      mediaQuery.removeEventListener("change", handleMediaChange);
-    };
-  }, []);
+      mediaQuery.removeEventListener('change', handleMediaChange)
+    }
+  }, [])
 
   useEffect(() => {
-    if (!hasPointer) return;
+    if (!hasPointer) return
 
     const handleMouseMove = (e: MouseEvent) => {
       if (rafIdRef.current) {
-        cancelAnimationFrame(rafIdRef.current);
+        cancelAnimationFrame(rafIdRef.current)
       }
 
       rafIdRef.current = requestAnimationFrame(() => {
-        setPosition({ x: e.clientX, y: e.clientY });
-      });
-    };
+        setPosition({ x: e.clientX, y: e.clientY })
+      })
+    }
 
     const handleInteractiveElements = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
+      const target = e.target as HTMLElement
       const isInteractive = Boolean(
-        target.tagName.toLowerCase() === "a" ||
-        target.tagName.toLowerCase() === "button" ||
-        target.closest("a") ||
-        target.closest("button") ||
-        target.hasAttribute("role") ||
-        target.closest(".interactive") ||
-        target.classList.contains("interactive")
-      );
+        target.tagName.toLowerCase() === 'a' ||
+          target.tagName.toLowerCase() === 'button' ||
+          target.closest('a') ||
+          target.closest('button') ||
+          target.hasAttribute('role') ||
+          target.closest('.interactive') ||
+          target.classList.contains('interactive')
+      )
 
-      setIsHovering(isInteractive);
-    };
+      setIsHovering(isInteractive)
+    }
 
-    const handleMouseOut = () => setIsHovering(false);
+    const handleMouseOut = () => setIsHovering(false)
 
-    document.addEventListener("mousemove", handleMouseMove, { passive: true });
-    document.addEventListener("mouseover", handleInteractiveElements, { passive: true });
-    document.addEventListener("mouseout", handleMouseOut, { passive: true });
+    document.addEventListener('mousemove', handleMouseMove, { passive: true })
+    document.addEventListener('mouseover', handleInteractiveElements, { passive: true })
+    document.addEventListener('mouseout', handleMouseOut, { passive: true })
 
     return () => {
       if (rafIdRef.current) {
-        cancelAnimationFrame(rafIdRef.current);
-        rafIdRef.current = null;
+        cancelAnimationFrame(rafIdRef.current)
+        rafIdRef.current = null
       }
 
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseover", handleInteractiveElements);
-      document.removeEventListener("mouseout", handleMouseOut);
-    };
-  }, [hasPointer]);
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseover', handleInteractiveElements)
+      document.removeEventListener('mouseout', handleMouseOut)
+    }
+  }, [hasPointer])
 
   if (!hasPointer) {
-    return null;
+    return null
   }
 
   return (
     <div
-      className="pointer-events-none fixed top-0 left-0 z-50 rounded-full bg-white/30 outline-1 outline-white/40 -outline-offset-1 backdrop-blur-sm"
+      className='relative pointer-events-none top-0 left-0 z-50 rounded-full bg-black/30 backdrop-blur-sm'
       style={{
-        height: isHovering ? "1rem" : "2rem",
-        width: isHovering ? "1rem" : "2rem",
+        height: isHovering ? '1rem' : '2rem',
+        width: isHovering ? '1rem' : '2rem',
         transform: `translate(${position.x}px, ${position.y}px) translate(-50%, -50%)`,
-        transition: "width 0.3s ease-out, height 0.3s ease-out",
+        transition: 'width 0.3s ease-out, height 0.3s ease-out',
       }}
     />
-  );
+  )
 }
