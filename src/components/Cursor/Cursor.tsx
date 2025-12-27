@@ -4,64 +4,33 @@ import { useEffect, useState, useRef } from 'react'
 
 export default function Cursor() {
   const [position, setPosition] = useState({ x: 0, y: 0 })
-  const [isHovering, setIsHovering] = useState(false)
-  const [hasPointer, setHasPointer] = useState(false)
-  const rafIdRef = useRef<number | null>(null)
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(pointer: fine)')
-    setHasPointer(mediaQuery.matches)
-
-    const handleMediaChange = (e: MediaQueryListEvent) => {
-      setHasPointer(e.matches)
-    }
-    mediaQuery.addEventListener('change', handleMediaChange)
-    return () => {
-      mediaQuery.removeEventListener('change', handleMediaChange)
-    }
-  }, [])
+  const [hover, setHover] = useState(false)
+  const [hasPointer, setHasPointer] = useState(() => typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches)
 
   useEffect(() => {
     if (!hasPointer) return
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (rafIdRef.current) {
-        cancelAnimationFrame(rafIdRef.current)
-      }
-
-      rafIdRef.current = requestAnimationFrame(() => {
-        setPosition({ x: e.clientX, y: e.clientY })
-      })
+    const onMouseMove = (e: MouseEvent) => {
+      setPosition({ x: e.clientX, y: e.clientY })
     }
+
+    const INTERACTIVE_SELECTOR = 'a, button, .interactive'
 
     const handleInteractiveElements = (e: MouseEvent) => {
       const target = e.target as HTMLElement
-      const isInteractive = Boolean(
-        target.tagName.toLowerCase() === 'a' ||
-          target.tagName.toLowerCase() === 'button' ||
-          target.closest('a') ||
-          target.closest('button') ||
-          target.hasAttribute('role') ||
-          target.closest('.interactive') ||
-          target.classList.contains('interactive')
-      )
+      const isInteractive = Boolean(target.closest(INTERACTIVE_SELECTOR))
 
-      setIsHovering(isInteractive)
+      setHover((prev) => (prev !== isInteractive ? isInteractive : prev))
     }
 
-    const handleMouseOut = () => setIsHovering(false)
+    const handleMouseOut = () => setHover(false)
 
-    document.addEventListener('mousemove', handleMouseMove, { passive: true })
+    document.addEventListener('mousemove', onMouseMove, { passive: true })
     document.addEventListener('mouseover', handleInteractiveElements, { passive: true })
     document.addEventListener('mouseout', handleMouseOut, { passive: true })
 
     return () => {
-      if (rafIdRef.current) {
-        cancelAnimationFrame(rafIdRef.current)
-        rafIdRef.current = null
-      }
-
-      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mousemove', onMouseMove)
       document.removeEventListener('mouseover', handleInteractiveElements)
       document.removeEventListener('mouseout', handleMouseOut)
     }
@@ -75,11 +44,22 @@ export default function Cursor() {
     <div
       className='relative pointer-events-none top-0 left-0 z-50 rounded-full bg-black/30 backdrop-blur-sm'
       style={{
-        height: isHovering ? '1rem' : '2rem',
-        width: isHovering ? '1rem' : '2rem',
+        height: hover ? '1rem' : '2rem',
+        width: hover ? '1rem' : '2rem',
         transform: `translate(${position.x}px, ${position.y}px) translate(-50%, -50%)`,
         transition: 'width 0.3s ease-out, height 0.3s ease-out',
       }}
     />
   )
 }
+
+//NOTES
+// const ref = useRef(null);
+
+// function onMouseMove(e) {
+//   ref.current.style.translate = `${e.clientX}px ${e.clientY}px`;
+// }
+
+// <div onMouseMove={onMouseMove}>
+//   <div ref={ref} />
+// </div>
